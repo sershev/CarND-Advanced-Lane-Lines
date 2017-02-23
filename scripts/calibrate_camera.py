@@ -11,6 +11,9 @@ class CalibrationUtils(object):
 
     @staticmethod
     def calibrate(cols=9, rows=6, path="./camera_cal/", debug=False):
+        """
+        Calibrate the camera based on images in camera_cal dir.
+        """
         # termination criteria
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
@@ -67,6 +70,10 @@ class CalibrationUtils(object):
 
     @staticmethod
     def load_calibration(file_path="calibration_info" ):
+        """
+        Load existing serialized camera matrix and destortion coefficients
+        or recalculate them if there is no file to load.
+        """
         info_file = Path(file_path)
         if info_file.is_file():
             with open(file_path, 'rb') as infile:
@@ -82,6 +89,9 @@ class CalibrationUtils(object):
 
     @staticmethod
     def undistort_img(img, mtx, dist, debug=False):
+        """
+        Apply camera matrix and destoriton cefficients to undestort an image. 
+        """
         undist = cv2.undistort(img, mtx, dist, None, mtx)
         if (debug):
             window_name = "Undistorted Image"

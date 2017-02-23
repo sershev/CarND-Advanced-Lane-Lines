@@ -5,6 +5,8 @@ from moviepy.editor import VideoFileClip
 import sys
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 print("Run with args: ")
 print(sys.argv)
 print()
@@ -14,16 +16,16 @@ mtx, dist = CalibrationUtils.load_calibration()
 clip = VideoFileClip(sys.argv[1])
 X,Y,Z = clip.w, clip.h, 3
 
-roishape = np.array([[[0, Y-10], 
-                      [int(X/2)-100, Y-int(Y/2.5)], 
-                      [int(X/2)+100, Y-int(Y/2.5)], 
-                      [X,Y-10]]], 
+roishape = np.array([[[0, Y-30], 
+                      [int(X/2)-100, Y-int(Y/2.7)], 
+                      [int(X/2)+100, Y-int(Y/2.7)], 
+                      [X,Y-30]]], 
                       dtype=np.int32)
 
-roi_dst_shape = np.array([[[int(X/4), Y-10], 
-                           [int(X/2)-400, 0], 
-                           [int(X/2)+400, 0], 
-                           [X-int(X/4),Y-10]]], 
+roi_dst_shape = np.array([[[0, Y-30], 
+                           [0, 0], 
+                           [X, 0], 
+                           [X,Y-30]]], 
                            dtype=np.int32)
 
 def process_image(image):
@@ -36,13 +38,22 @@ def process_image(image):
 
     # transform
     transformed_roi = Roi.transform(roi, roishape.reshape(4,2), roi_dst_shape)
-    Utils.compare_before_after(roi, transformed_roi)
+    #Utils.compare_before_after(roi, transformed_roi)
     
-    # TODO - color gradient threshold
+    # image threshold
     threshold = Roi.threshold(transformed_roi)
-    Utils.compare_before_after(roi, threshold)
+    #Utils.compare_before_after(transformed_roi, threshold)
 
     # TODO - detect lane
+    #import pdb
+    #pdb.set_trace()
+    histogram = np.sum(threshold[int(threshold.shape[0]/2):,:], axis=0)
+    plt.plot(histogram)
+    plt.show()
+
+    histogram = np.sum(threshold[:int(threshold.shape[0]/2),:], axis=0)
+    plt.plot(histogram)
+    plt.show()
 
     # TODO - calc curvature
 
