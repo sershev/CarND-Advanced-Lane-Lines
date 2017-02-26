@@ -27,8 +27,6 @@ class Roi(object):
         """
         Changes the perspective of the image from src_points do dst_points.
         """
-        #import pdb
-        #pdb.set_trace()
         src_points, dst_points = np.float32(src_points), np.float32(dst_points)
         M = cv2.getPerspectiveTransform(src_points, dst_points)
         warped = cv2.warpPerspective(img, M, img.shape[0:2][::-1])
